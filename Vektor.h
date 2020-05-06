@@ -5,6 +5,11 @@ class Vektor
 {
 public:
     // Initialize
+    // I0: default
+    Vektor() 
+        :sz{0},
+        elem{nullptr}
+    { };
     // I1. Old style
     Vektor(int size);
 
