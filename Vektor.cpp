@@ -2,13 +2,16 @@
 #include "Vektor.h"
 #include <iostream>
 
+int Vektor::key = 0;
 
 Vektor::Vektor(int size)
     :sz{ size },  // member initialization list
     elem{ new double[size] }
 {
-    std::cout << "\n constructor (Vector) size\n";
     memset(elem, 0, sizeof(elem));                  // Init
+    val = Vektor::key++;
+    val = Vektor::key++;
+    std::cout << "\n constructor Vector (size) \t" << val << "\n";
 }
 
 Vektor::Vektor(std::initializer_list<double> lst)
@@ -17,18 +20,26 @@ Vektor::Vektor(std::initializer_list<double> lst)
 {
     // copy elements in the list
     std::copy(lst.begin(), lst.end(), elem);
-    std::cout << "\n constructor Vector (lst) \n";
+    val = Vektor::key++;
+    std::cout << "\n constructor Vector (lst) \t" << val << "\n";
+
 }
 
 Vektor::~Vektor()
 {
     if (elem)
     {
-        std::cout << "\n destructor (Vector) size \t" << sz << "\n";
+        std::cout << "\n destructor (Vector) key \t" << val << "\n";
         delete[] elem;
         elem = nullptr;
     }
     sz = 0;
+    val = 0;
+}
+
+double & Vektor::operator[](int index) const
+{
+    return elem[index];
 }
 
 double & Vektor::operator[](int index)
@@ -76,5 +87,78 @@ Vektor& Vektor::pushback(double & d)
     }
     arr = nullptr;
     */
+    return *this;
+}
+
+Vektor::Vektor(const Vektor& a)
+{
+    // error check and exception later
+    sz = a.size();
+    elem = new double[sz];
+
+    for (int i = 0; i < sz; i++)
+    {
+        // no pointer magic here
+        // just data copy
+        elem[i] = a[i];
+    }
+    val = Vektor::key++;
+    std::cout << "\nCopy constructor\t" << val << "\n";
+}
+
+Vektor & Vektor::operator=(const Vektor & a)
+{
+    // Free whatever data we had;
+    // Ideally have a resource free function
+    if (elem)
+    {
+        delete[] elem;
+    }
+
+    sz = a.size();
+    elem = new double[sz];
+
+    for (int i = 0; i < sz; i++)
+    {
+        // no pointer magic here
+        // just data copy
+        elem[i] = a[i];
+    }
+    val = Vektor::key++;
+    std::cout << "\nCopy assignment\t" << val << "\n";
+
+    return *this;
+}
+
+Vektor::Vektor(Vektor && a)
+    :sz{a.size()},
+    elem{a.elem}
+{
+    // Copied the pointer
+    // So delete a's copy
+    //delete a;
+    a.elem = nullptr;
+    a.sz = 0;
+    a.val = 0;
+
+    val = Vektor::key++;
+    std::cout << "\n Move constructor\t" << val << "\n";
+}
+
+Vektor & Vektor::operator=(Vektor && a)
+{
+    sz = a.size();
+    elem = a.elem;
+
+    // Copied the pointer
+    // So delete a's copy
+    // delete [] a.elem;
+
+    // DO NOT FREE. It will spoil this->elem
+    a.elem = nullptr;
+    a.sz = 0;
+
+    val = Vektor::key++;
+    std::cout << "\n Move assignment\t" << val << "\n";
     return *this;
 }
