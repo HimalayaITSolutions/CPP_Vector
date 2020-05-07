@@ -77,6 +77,101 @@ Triangle::~Triangle()
     }
 }
 
+Triangle::Triangle(const Triangle & t)
+{
+    val = Triangle::keyT++;
+    point = new Vektor*[size];
+
+    for (int i = 0; i < size; i++)
+    {
+        point[i] = new Vektor(*t.point[i]);
+    }
+}
+
+Triangle::Triangle(Triangle && t)
+{
+    val = t.val;
+    point = t.point;
+
+    for (int i = 0; i < size; i++)
+    {
+        delete t.point[i];
+        t.point[i] = nullptr;
+    }
+    delete [] t.point;
+    t.point = nullptr;
+    t.val = -val;
+}
+
+Triangle & Triangle::operator=(const Triangle & t)
+{
+    // ideally have a free
+
+    if (point != nullptr)
+    {
+        //std::cout << "\n Size point \t" << sizeof(point);
+        for (int i = 0; i < 3; i++)
+        {
+            if (point[i] != nullptr)
+            {
+                delete point[i];
+                point[i] = nullptr;
+            }
+
+        }
+        delete[] point;
+        point = nullptr;
+    }
+
+    val = Triangle::keyT++;
+    point = new Vektor*[size];
+
+    for (int i = 0; i < size; i++)
+    {
+        point[i] = new Vektor(*t.point[i]);
+    }
+    
+    return *this;
+}
+
+Triangle & Triangle::operator=(Triangle && t)
+{
+    // free current memory
+    // Then copy
+    // then free "t"'s memory
+
+    if (point != nullptr)
+    {
+        //std::cout << "\n Size point \t" << sizeof(point);
+        for (int i = 0; i < 3; i++)
+        {
+            if (point[i] != nullptr)
+            {
+                delete point[i];
+                point[i] = nullptr;
+            }
+
+        }
+        delete[] point;
+        point = nullptr;
+    }
+
+    val = t.val;
+    point = t.point;
+
+    for (int i = 0; i < size; i++)
+    {
+        delete t.point[i];
+        t.point[i] = nullptr;
+    }
+    delete[] t.point;
+    t.point = nullptr;
+    t.val = -val;
+
+    return *this;
+
+}
+
 void Triangle::draw()
 {
     std::cout << "\n inside Triangle::draw \n ";

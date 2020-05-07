@@ -17,8 +17,17 @@ public:
     };
 
     Triangle(Vektor *v[], int num);
-
     virtual ~Triangle();
+
+
+    // Constructor move and copy
+    Triangle(const Triangle& t);
+    Triangle(Triangle&& t);
+
+    // Assigment copy and move
+    Triangle & operator=(const Triangle& t);
+    Triangle & operator=(Triangle&& t);
+
 
     void draw();
 
