@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 
+template <typename T>
 class Vektor
 {
 public:
@@ -13,7 +14,7 @@ public:
         /*
         sz = 0;
         elem = nullptr;*/
-        val = Vektor::key++;
+        val = Vektor<T>::key++;
     };
     // I1. Old style
     // This can lead to stupid compiler initializations like
@@ -22,7 +23,7 @@ public:
     explicit Vektor(int size);
 
     // I2. Initializer list
-    Vektor(std::initializer_list<double> lst);
+    Vektor(std::initializer_list<T> lst);
     virtual ~Vektor();
 
     // Returns individual Elements
@@ -30,11 +31,11 @@ public:
     // Undersatnd why we need 2 declaration and 2 definitions
 
     // Alternatively just reuse the variable directly as it is constructor
-    double& operator[](int index) const;
-    double& operator[](int index);
+    T& operator[](int index) const;
+    T& operator[](int index);
 
     // I3. Pushback
-    Vektor& pushback(double& d);
+    Vektor& pushback(T& d);
 
     // Simple return size
     int size() const { return sz;}
@@ -68,7 +69,7 @@ private:
     // Member Initialization
     int sz = 0;
     int val = 0;
-    double *elem = nullptr;
+    T *elem = nullptr;
 };
 
 

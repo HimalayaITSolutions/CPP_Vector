@@ -2,11 +2,13 @@
 #include "Vektor.h"
 #include <iostream>
 
-int Vektor::key = 0;
+template<typename T>
+int Vektor<T>::key = 0;
 
-Vektor::Vektor(int size)
+template<typename T>
+Vektor<T>::Vektor(int size)
     :sz{ size },  // member initialization list
-    elem{ new double[size] }
+    elem{ new T[size] }
 {
     memset(elem, 0, sizeof(elem));                  // Init
     val = Vektor::key++;
@@ -14,9 +16,10 @@ Vektor::Vektor(int size)
     std::cout << "\n constructor Vector (size) \t" << val << "\n";
 }
 
-Vektor::Vektor(std::initializer_list<double> lst)
-    :sz{static_cast<int>(lst.size())}, // size_t to int, remember syntax. Remember syntac for templated things
-    elem{new double[lst.size()]} 
+template<typename T>
+Vektor<T>::Vektor(std::initializer_list<T> lst)
+    :sz{static_cast<int>(lst.size())}, // size_t to int, remember syntax. Remember syntax for templated things
+    elem{new T[lst.size()]} 
 {
     // copy elements in the list
     std::copy(lst.begin(), lst.end(), elem);
@@ -25,7 +28,8 @@ Vektor::Vektor(std::initializer_list<double> lst)
 
 }
 
-Vektor::~Vektor()
+template<typename T>
+Vektor<T>::~Vektor()
 {
     if (elem)
     {
@@ -37,21 +41,24 @@ Vektor::~Vektor()
     val = 0;
 }
 
-double & Vektor::operator[](int index) const
+template<typename T>
+T& Vektor<T>::operator[](int index) const
 {
     return elem[index];
 }
 
-double & Vektor::operator[](int index)
+template<typename T>
+T& Vektor<T>::operator[](int index)
 {
     return elem[index];
 }
 
-Vektor& Vektor::pushback(double & d)
+template<typename T>
+Vektor<T>& Vektor<T>::pushback(T & d)
 {
     // Add to end
     int size = sz;
-    double * arr = new double[sz++];
+    T * arr = new T[sz++];
     delete[] arr;
     
     /*for (int i = 0; i < size; i++)
@@ -90,11 +97,12 @@ Vektor& Vektor::pushback(double & d)
     return *this;
 }
 
-Vektor::Vektor(const Vektor& a)
+template<typename T>
+Vektor<T>::Vektor(const Vektor<T>& a)
 {
     // error check and exception later
     sz = a.size();
-    elem = new double[sz];
+    elem = new T[sz];
 
     for (int i = 0; i < sz; i++)
     {
@@ -106,7 +114,8 @@ Vektor::Vektor(const Vektor& a)
     std::cout << "\nCopy constructor\t" << val << "\n";
 }
 
-Vektor & Vektor::operator=(const Vektor & a)
+template<typename T>
+Vektor<T>& Vektor<T>::operator=(const Vektor<T> & a)
 {
     // Free whatever data we had;
     // Ideally have a resource free function
@@ -116,7 +125,7 @@ Vektor & Vektor::operator=(const Vektor & a)
     }
 
     sz = a.size();
-    elem = new double[sz];
+    elem = new T[sz];
 
     for (int i = 0; i < sz; i++)
     {
@@ -130,7 +139,8 @@ Vektor & Vektor::operator=(const Vektor & a)
     return *this;
 }
 
-Vektor::Vektor(Vektor && a)
+template<typename T>
+Vektor<T>::Vektor(Vektor<T> && a)
     :sz{a.size()},
     elem{a.elem}
 {
@@ -145,7 +155,8 @@ Vektor::Vektor(Vektor && a)
     std::cout << "\n Move constructor\t" << val << "\n";
 }
 
-Vektor & Vektor::operator=(Vektor && a)
+template<typename T>
+Vektor<T> & Vektor<T>::operator=(Vektor<T> && a)
 {
     sz = a.size();
     elem = a.elem;
@@ -162,3 +173,8 @@ Vektor & Vektor::operator=(Vektor && a)
     std::cout << "\n Move assignment\t" << val << "\n";
     return *this;
 }
+
+
+// Crazy Template WAR
+// https://isocpp.org/wiki/faq/templates#separate-template-fn-defn-from-decl
+template class Vektor<double>;
