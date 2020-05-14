@@ -131,7 +131,7 @@ void testTemplateFuncs()
     // Called Policy objects as well
     int c3 = count3(v1, &Less_than{ 6 });  // Should give same answer to c2.
     int c4 = count3(v2, &More_than{ 7.3}); // but we need a new func than count2 for " > case" function. Here, count stays same.
-    int cz = count3(v3, &Z);
+    int cz = count3(v3, new Zeroes<int>);
 
     // The craziest, crappiest, lambda in c++
     // Expands to function object above
