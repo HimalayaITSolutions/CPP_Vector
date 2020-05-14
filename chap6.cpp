@@ -87,12 +87,16 @@ public:
 // We dont need to create many counts, just one count and multiple internal algo'es telling how to count.
 
 template <typename Seq, typename Predicate>
-int count3(const Seq s, Predicate P)
+int count3(const Seq s, Predicate* P)
 {
     int i = 0;
+    Predicate b = *P;
     for (const auto &a : s)
     {
-        if (P(a)) i++;
+        //if (b(a)) i++;
+        //if ((*P)(a)) i++;
+        if (P->operator()(a)) i++;
+         
     }
     return i;
 }
@@ -125,17 +129,17 @@ void testTemplateFuncs()
     Zeroes<int> Z;
 
     // Called Policy objects as well
-    int c3 = count3(v1, Less_than{ 6 });  // Should give same answer to c2.
-    int c4 = count3(v2, More_than{ 7.3}); // but we need a new func than count2 for " > case" function. Here, count stays same.
-    int cz = count3(v3, Z);
+    int c3 = count3(v1, &Less_than{ 6 });  // Should give same answer to c2.
+    int c4 = count3(v2, &More_than{ 7.3}); // but we need a new func than count2 for " > case" function. Here, count stays same.
+    int cz = count3(v3, &Z);
 
     // The craziest, crappiest, lambda in c++
     // Expands to function object above
     // use only if simple
     int x = 6;
-    int c5 = count3(v1, [&](int a) {return (a < x); });  // Capture locals by ref, capture X.
-    int c6 = count3(v2, [=](double a) {return (a < 7.5); }); // capture and reuse locals by value
-    int c7 = count3(v3, [](int a) {return (a == 0); }); // Corresponds to zeroes, no capture
+    int c5 = count3(v1, &[&](int a) {return (a < x); });  // Capture locals by ref, capture X.
+    int c6 = count3(v2, &[=](double a) {return (a < 7.5); }); // capture and reuse locals by value
+    int c7 = count3(v3, &[](int a) {return (a == 0); }); // Corresponds to zeroes, no capture
 
 
 }
