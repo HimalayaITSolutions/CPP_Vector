@@ -102,6 +102,33 @@ int count3(const Seq s, Predicate* P)
 }
 
 
+// Template mechanisms
+
+template <class T>
+    //using value_type = T;    // cant use 2 lines
+    T variable = 4 * sizeof(T);
+
+
+template <typename T>
+void dump(T a)
+{
+    //cout << typename T::value_type << "\n" << a << "\n"; // cant dump the value. compile time
+    cout << a;
+}
+
+
+template <typename T>
+    //bool func = dump(T& a);  // only try constexpr or functions which operate on traits or types
+bool func = is_pod<T>::value;
+
+
+void VariableTemplates()
+{
+    cout << func<int> << "\n";
+    auto a1 = variable<int>;
+    dump(a1);
+}
+
 void testTemplateFuncs()
 {
     std::vector<int> v1{ 5,6,7,8 };
@@ -140,8 +167,6 @@ void testTemplateFuncs()
     int c5 = count3(v1, &[&](int a) {return (a < x); });  // Capture locals by ref, capture X.
     int c6 = count3(v2, &[=](double a) {return (a < 7.5); }); // capture and reuse locals by value
     int c7 = count3(v3, &[](int a) {return (a == 0); }); // Corresponds to zeroes, no capture
-
-
 }
 
 
