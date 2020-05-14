@@ -74,9 +74,9 @@ template <typename T>
 class Zeroes
 {
     using Value_type = T;
-    T a = 0;
+   // T a = 0;
 public:
-    Zeroes(T a1) { a = a1; }
+    //Zeroes(T a1) { a = a1; }
     Zeroes() {}
     bool operator()( Value_type in) { return (in == 0); }
 };
@@ -120,9 +120,9 @@ void testTemplateFuncs()
     // Decouple data, algorithm and loop
 
     // Try instantitate without Template argument
-    // cant as it needs some template if 
-    Zeroes Z(1);
-    //Zeroes<int> z1;
+    // unless type is explicitly specified 
+   // Zeroes Z(1);
+    Zeroes<int> Z;
 
     // Called Policy objects as well
     int c3 = count3(v1, Less_than{ 6 });  // Should give same answer to c2.
