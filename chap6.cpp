@@ -106,7 +106,7 @@ int count3(const Seq s, Predicate* P)
 
 template <class T>
     //using value_type = T;    // cant use 2 lines
-    T variable = 4 * sizeof(T);
+    constexpr T variable = 4 * sizeof(T);
 
 
 template <typename T>
@@ -119,15 +119,84 @@ void dump(T a)
 
 template <typename T>
     //bool func = dump(T& a);  // only try constexpr or functions which operate on traits or types
-bool func = is_pod<T>::value;
+constexpr bool func = is_pod<T>::value;
 
 
 void VariableTemplates()
 {
     cout << func<int> << "\n";
-    auto a1 = variable<int>;
+    constexpr auto a1 = variable<int>;
     dump(a1);
+
+    // simple not compile time but auto errors
+    auto a2 = int{ };
+    //a2 = double{ 6.8 }; // compile and see error
+    cout << "\n" << a2;
 }
+
+//////////////////////////////////////////////////////////////////////////
+
+template <typename A, typename B>
+class map
+{
+    
+public:
+    using value_type = B;
+    A key;
+    B value;
+
+    map(A inKey, B inValue)
+        :key{inKey},
+        value{inValue}
+    {
+
+    }
+
+    void print() { cout << key << value; }
+};
+
+
+// Play with types only
+template <typename A>
+using StringMap = map<string, A>;
+
+// Define Value type for 1
+template <typename T>
+using Value_type = typename T::value_type;
+
+/*
+template>typename A, typename B>
+void aliasTemplate(map<A,B> &m)  // No idea of templated functions yet */
+
+template <typename T>
+void aliasTemplate(T &m)
+{
+    // Method 1
+    // vector <Value_type<T>> val;   // remember how this works. play with types
+    
+    // Method 2, gets value of variable.
+    using mytype = decltype(m.value);
+    
+    // Method 3
+    //using mytype = typename T::value_type;
+    vector<mytype> val;
+
+    val.push_back(m.value);
+    cout << val[0];
+
+}
+
+void createAlias()
+{
+    map m1(2, 4.5);
+    map m2("first"s, 1);
+    aliasTemplate(m1);
+    aliasTemplate(m2);
+
+    StringMap<int> m("2"s, 2); // this is of type String int.
+    m = m2;     
+}
+
 
 void testTemplateFuncs()
 {
