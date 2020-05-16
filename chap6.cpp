@@ -172,17 +172,17 @@ template <typename T>
 void aliasTemplate(T &m)
 {
     // Method 1
-    // vector <Value_type<T>> val;   // remember how this works. play with types
+    vector <Value_type<T>> val;   // remember how this works. play with types
     
-    // Method 2, gets value of variable.
-    using mytype = decltype(m.value);
+    // Method 2, gets value of variable. not the best pbe, prefer #1
+    //using mytype = decltype(m.value);
     
     // Method 3
     //using mytype = typename T::value_type;
-    vector<mytype> val;
+    // vector<mytype> val;
 
     val.push_back(m.value);
-    cout << val[0];
+    cout << val[0]; // Illegal use as expression << Value_type<T>;
 
 }
 
